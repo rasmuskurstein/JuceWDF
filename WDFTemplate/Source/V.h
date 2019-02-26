@@ -10,6 +10,8 @@
 
 #pragma once
 #include "OnePort.h"
+#include "WDF.h"
+
 class V : public WDF{
     
 public:
@@ -17,7 +19,7 @@ public:
     ~V();
     double WaveUp() override;
     void WaveDown(double) override;
-    void setVoltage(double);
+    //void setVoltage(double);
     
 private:
     

@@ -9,6 +9,8 @@
 */
 
 #include "L.h"
+#include "WDF.h"
+
 L::L(double res){
     setPortRes(res);
     State = 0;

@@ -11,14 +11,16 @@
 #include "WDF.h"
 
 WDF::WDF(){
-    PortRes = 0;
+    PortRes = 1;
+    //setWU(0);
+    //setWD(0);
 };
 
 WDF::~WDF(){
 };
 
 double WDF::getVoltage(){
-    double Volts = (getWU()+getWD())/2;
+    float Volts = (getWU()+getWD())/2;
     return Volts;
 };
 
@@ -44,4 +46,14 @@ void WDF::setWD(double wave){
 };
 void WDF::setPortRes(double res){
     PortRes = res;
+};
+
+double WDF::WaveUp(){
+    double wave = 0;
+    setWU(wave); // always zero for linear resistor
+    return wave;
+};
+
+void WDF::WaveDown(double parentWave){
+    setWD(parentWave);
 };

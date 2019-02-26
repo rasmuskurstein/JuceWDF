@@ -17,6 +17,9 @@
 #include "ser.h"
 #include "R.h"
 #include "Adaptor.h"
+#include "C.h"
+#include "L.h"
+#include "par.h"
 
 //==============================================================================
 /**
@@ -67,9 +70,15 @@ private:
     double fc;       // Cutoff Freq
     double df;       // Dampening Factor
     double wc;
-    R Vout;
-    V Vin;
-    ser circuit;
+    
+    C C1{1};
+    L L1{1};
+    R Vout{1};
+    V Vin{0,1};
+    par* p1;
+    ser* s1;
+    ser* circuit;
+    
 //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WdftemplateAudioProcessor)
 };

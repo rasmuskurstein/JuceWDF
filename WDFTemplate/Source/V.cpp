@@ -9,6 +9,8 @@
 */
 
 #include "V.h"
+#include "WDF.h"
+
 V::V(double sourveVolt, double res){
     setVoltage(sourveVolt);
     setPortRes(res);

@@ -12,14 +12,20 @@
 #include "Adaptor.h"
 #include "WDF.h"
 
-class ser : public Adaptor{
+class ser : public WDF{
     
 public:
-    ser(WDF, WDF);
+    ser(WDF*, WDF*);
     ~ser();
     double WaveUp() override;
     void WaveDown(double) override;
+    
+    // no adaptor
+    WDF* getLeftChild();
+    WDF* getRightChild();
 private:
     
-    
+    // No adaptor
+    WDF* LeftChild;
+    WDF* RightChild;
 };

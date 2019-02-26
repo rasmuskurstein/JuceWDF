@@ -12,15 +12,20 @@
 #include "WDF.h"
 #include "Adaptor.h"
 
-ser::ser(WDF left, WDF right) : Adaptor(left, right) {
-    double res = left.getPortRes()+right.getPortRes();
+ser::ser(WDF* left, WDF* right)// : Adaptor(left, right)
+    {
+    double res = left->getPortRes()+right->getPortRes();
     setPortRes(res);
+        
+    // No adaptor
+    LeftChild = left;
+    RightChild = right;
 }
 ser::~ser(){
 };
 
 double ser::WaveUp(){
-    double wave = -(getLeftChild().WaveUp()+getRightChild().WaveUp());
+    double wave = -(getLeftChild()->WaveUp()+getRightChild()->WaveUp());
     setWU(wave);
     return wave;
 };
@@ -28,9 +33,21 @@ double ser::WaveUp(){
 void ser::WaveDown(double parentWave){
     setWD(parentWave);
     
-    double WDL = getLeftChild().getWU()-(getLeftChild().getPortRes()/getPortRes())*(parentWave+getLeftChild().getWU()+getRightChild().getWU());
-    getLeftChild().WaveDown(WDL);
+    double WDL = getLeftChild()->getWU()-(getLeftChild()->getPortRes()/getPortRes())*(parentWave+getLeftChild()->getWU()+getRightChild()->getWU());
+    getLeftChild()->WaveDown(WDL);
     
-    double WDR = getRightChild().getWU()-(getRightChild().getPortRes()/getPortRes())*(parentWave+getLeftChild().getWU()+getRightChild().getWU());
-    getRightChild().WaveDown(WDR);
+    double WDR = getRightChild()->getWU()-(getRightChild()->getPortRes()/getPortRes())*(parentWave+getLeftChild()->getWU()+getRightChild()->getWU());
+    getRightChild()->WaveDown(WDR);
 };
+
+
+// No adaptor
+
+WDF* ser::getLeftChild(){
+    return LeftChild;
+}
+
+WDF* ser::getRightChild(){
+    return RightChild;
+}
+

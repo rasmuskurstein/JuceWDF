@@ -9,6 +9,8 @@
 */
 
 #include "R.h"
+#include "WDF.h"
+
 
 R::R(double res){
     setPortRes(res);

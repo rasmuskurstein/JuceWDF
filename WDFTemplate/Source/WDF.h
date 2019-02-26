@@ -15,10 +15,7 @@ class WDF {
 public:
     
     WDF();
-     
     virtual ~WDF();
-    
-    virtual double waveUp();
     
     double getVoltage();
     void setVoltage(double);
@@ -28,8 +25,8 @@ public:
     void setWU(double);
     void setWD(double);
     void setPortRes(double);
-    virtual double WaveUp();
-    virtual void WaveDown(double);
+    virtual double WaveUp() = 0;
+    virtual void WaveDown(double) = 0;
     
     
 private:

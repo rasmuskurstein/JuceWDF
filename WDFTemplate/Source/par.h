@@ -10,16 +10,25 @@
 
 #pragma once
 #include "Adaptor.h"
+#include "WDF.h"
 
-class par : public Adaptor{
+
+class par : public WDF{
     
 public:
-    par(WDF, WDF);
+    par(WDF*, WDF*);
     ~par();
     double WaveUp() override;
     void WaveDown(double) override;
     
+    // no adaptor
+    WDF* getLeftChild();
+    WDF* getRightChild();
 private:
     
+    
+    // No adaptor
+    WDF* LeftChild;
+    WDF* RightChild;
     
 };

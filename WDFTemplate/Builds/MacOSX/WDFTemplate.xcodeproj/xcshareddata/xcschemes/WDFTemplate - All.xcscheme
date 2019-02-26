@@ -53,8 +53,18 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
+         BundleIdentifier = "com.roli.juce.pluginhost"
          FilePath = "/Users/rasmuskurstein/Code/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app">
       </PathRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "D49BD6A3D3DB9AF0B998FA6F"
+            BuildableName = "WDFTemplate - All"
+            BlueprintName = "WDFTemplate - All"
+            ReferencedContainer = "container:WDFTemplate.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

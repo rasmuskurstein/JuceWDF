@@ -18,10 +18,10 @@ public:
     virtual ~Adaptor();
     WDF getLeftChild();
     WDF getRightChild();
-    virtual double WaveUp() override;
-    virtual void WaveDown(double) override;
+   // virtual double WaveUp() override;
+   // virtual void WaveDown(double) override;
     
 private:
-    WDF LeftChild;
-    WDF RightChild;
+    WDF* LeftChild;
+    WDF* RightChild;
 };

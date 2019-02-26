@@ -16,6 +16,8 @@
 #include "R.h"
 #include "L.h"
 #include "C.h"
+#include "WDF.h"
+
 
 
 //==============================================================================
@@ -104,20 +106,22 @@ void WdftemplateAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    double fs = getSampleRate();
+    
     fc = 100;           // Cutoff Freq
     df = 0.5;           // Dampening Factor
     wc = 2*double_Pi*fc; //
     double C1val = 3.5e-5;
-    C C1 = new C(1/(2*C1val*fs));
+    C1.setPortRes(1/(2*C1val*sampleRate));
     double L1val = 1/(square(wc)*C1val);
-    L L1 = new L(2*fs*L1val);
+    L1.setPortRes(2*sampleRate*L1val);
     double R1val = 1/(2*df)*sqrt(L1val/C1val);
-    Vout = new R(R1val);
-    Vin = new V(0,1);
-    par p1 = new par(L1,Vout);
-    ser s1 = new ser(Vin,p1);
-    circuit = new ser(s1,C1);
+    Vout.setPortRes(R1val);
+    
+    p1 = par(L(1),V(0, 1));
+    s1 = ser(&Vin,p1);
+    circuit = ser(s1,&C1);
+    
+    
 }
 
 void WdftemplateAudioProcessor::releaseResources()
@@ -177,12 +181,15 @@ void WdftemplateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBu
         
         if (channel == 0)
         {
-            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            for (int j = 0; j < buffer.getNumSamples(); ++j)
             {
-                Vin.setVoltage(buffer.getSample(sample, channel));
-                circuit.WaveUp();
-                circuit.setWD(0);
-                channelData[sample] = Vout.getVoltage();
+                auto sample = buffer.getReadPointer (channel)[j];
+                Vin.setVoltage(sample);
+                circuit->WaveUp();
+                circuit->WaveDown(0);
+                //std::cout << circuit.getRightChild()->getPortRes();
+                std::cout << Vout.getVoltage();
+                channelData[j] = Vout.getVoltage();
             }
         } else
         {

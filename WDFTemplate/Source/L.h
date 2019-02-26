@@ -10,6 +10,8 @@
 
 #pragma once
 #include "OnePort.h"
+#include "WDF.h"
+
 class L : public WDF{
     
 public:
