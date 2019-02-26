@@ -32,14 +32,19 @@ double ser::WaveUp(){
 };
 
 void ser::WaveDown(double parentWave){
+    // DAFX (12.16)
     setWD(parentWave);
+    double A1 = parentWave;
+    double A2 = getLeftChild()->getWU();
+    double A3 = getRightChild()->getWU();
+    double R1 = getPortRes();
+    double R2 = getLeftChild()->getPortRes();
+    double R3 = getRightChild()->getPortRes();
     
-    double WDL = getLeftChild()->getWU()-(getLeftChild()->getPortRes()/getPortRes())*(parentWave+getLeftChild()->getWU()+getRightChild()->getWU());
-    
+    double WDL = A2 - 2*R2*(A1+A2+A3)/(R1+R2+R3);
+    double WDR = A3 - 2*R3*(A1+A2+A3)/(R1+R2+R3);
+   
     getLeftChild()->WaveDown(WDL);
-    
-    double WDR = getRightChild()->getWU()-(getRightChild()->getPortRes()/getPortRes())*(parentWave+getLeftChild()->getWU()+getRightChild()->getWU());
-    
     getRightChild()->WaveDown(WDR);
 };
 

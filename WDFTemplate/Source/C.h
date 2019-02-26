@@ -20,5 +20,5 @@ public:
     void WaveDown(double) override;
     
 private:
-    double State;
+    double State;   // for unit delay
 };

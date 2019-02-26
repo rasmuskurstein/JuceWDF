@@ -62,21 +62,33 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    void setParameters(float c, float d);
     
 private:
+    
+    AudioParameterFloat *mpCutoff;
+    AudioParameterFloat *mpDamp;
     
     double fc;       // Cutoff Freq
     double df;       // Dampening Factor
     double wc;
+    double fs;
+    double C1val;
+    double R1val;
+    double L1val;
     
+    // Initialize one port elements
     C C1{1};
     L L1{1};
     R Vout{1};
     V Vin{0,1};
+    
+    // Adaptors (serial / parallel connections)
     std::shared_ptr<par> p1;
     std::shared_ptr<ser> s1;
     std::shared_ptr<ser> circuit;
     
+    // shared pointers
     std::shared_ptr<L> L1Ptr = std::make_shared<L>(L1);
     std::shared_ptr<R> VoutPtr = std::make_shared<R>(Vout);
     std::shared_ptr<V> VinPtr = std::make_shared<V>(Vin);

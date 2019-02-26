@@ -33,6 +33,8 @@ WdftemplateAudioProcessor::WdftemplateAudioProcessor()
                        )
 #endif
 {
+    addParameter(mpCutoff = new AudioParameterFloat ("mpCutoff", "Cutoff", 20.f, 20000.f, 10000.f));
+    addParameter(mpDamp = new AudioParameterFloat ("mpDamp", "Damp", 0.f, 2.f, 0.3f));
 }
 
 WdftemplateAudioProcessor::~WdftemplateAudioProcessor()
@@ -106,17 +108,24 @@ void WdftemplateAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    fs = sampleRate;
     
-    fc = 100;           // Cutoff Freq
-    df = 0.5;           // Dampening Factor
-    wc = 2*double_Pi*fc; //
-    double C1val = 3.5e-5;
-    C1Ptr->setPortRes(1/(2*C1val*sampleRate));
-    double L1val = 1/(square(wc)*C1val);
-    L1Ptr->setPortRes(2*sampleRate*L1val);
-    double R1val = 1/(2*df)*sqrt(L1val/C1val);
+    // Cutoff Freq
+    fc = 100;
+    wc = 2*double_Pi*fc;
+    
+    // Dampening Factor
+    df = 0.3;
+    
+    //setup values for one port elements
+    C1val = 3.5e-5;
+    C1Ptr->setPortRes(1/(2*C1val*fs));
+    L1val = square(1/wc)/C1val;
+    L1Ptr->setPortRes(2*fs*L1val);
+    R1val = 1/(2*df)*sqrt(L1val/C1val);
     VoutPtr->setPortRes(R1val);
     
+    //connect one port elements with adaptors
     p1 = std::make_shared<par>(C1Ptr,VoutPtr);
     s1 = std::make_shared<ser>(VinPtr,p1);
     circuit = std::make_shared<ser>(s1,L1Ptr);
@@ -158,6 +167,9 @@ void WdftemplateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBu
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    
+    setParameters(mpCutoff->get(),mpDamp->get());
+    //setDamp (mpDamp->get());
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -183,9 +195,16 @@ void WdftemplateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBu
             {
                 auto sample = buffer.getReadPointer (channel)[j];
                 double sam = (double) sample;
+                // feed samples as input voltage
                 VinPtr->setVoltage(sam);
+                
+                // get upgoing waves
                 circuit->WaveUp();
+                
+                // set downgoing waves
                 circuit->WaveDown(0);
+                
+                // correct attenuation
                 double makeupGain = 200;
                 channelData[j] = VoutPtr->Voltage()*makeupGain;
             }
@@ -206,7 +225,7 @@ bool WdftemplateAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* WdftemplateAudioProcessor::createEditor()
 {
-    return new WdftemplateAudioProcessorEditor (*this);
+    return new GenericAudioProcessorEditor (this);
 }
 
 //==============================================================================
@@ -215,12 +234,29 @@ void WdftemplateAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    
+    std::unique_ptr<XmlElement> xml (new XmlElement ("RLCLP"));
+    xml->setAttribute ("mpCutoff", (double)*mpCutoff);
+    xml->setAttribute ("mpDamp", (double)*mpDamp);
+    copyXmlToBinary (*xml, destData);
 }
 
 void WdftemplateAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    
+    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    
+    if (xmlState.get () != nullptr)
+    {
+        if (xmlState->hasTagName ("RLCLP"))
+        {
+            *mpCutoff = xmlState->getDoubleAttribute ("mpCutoff", 10e3);
+            *mpDamp = xmlState->getDoubleAttribute ("mpDamp", 0.3);
+        }
+    }
+    
 }
 
 //==============================================================================
@@ -228,4 +264,19 @@ void WdftemplateAudioProcessor::setStateInformation (const void* data, int sizeI
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new WdftemplateAudioProcessor();
+}
+
+
+//____________________________________________________________________________________
+
+void WdftemplateAudioProcessor::setParameters(float freq, float damp){
+    fc = freq;
+    df = damp;
+    wc = 2*double_Pi*fc;
+    
+    L1val = square(1/wc)/C1val;
+    L1Ptr->setPortRes(2*fs*L1val);
+    R1val = 1/(2*df)*sqrt(L1val/C1val);
+    VoutPtr->setPortRes(R1val);
+    
 }

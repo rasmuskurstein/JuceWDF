@@ -30,10 +30,10 @@ double par::WaveUp(){
 };
 
 void par::WaveDown(double parentWave){
+    // DAFX (12.16)
     setWD(parentWave);
-   
     double G1 = 1/getPortRes();
-    double A1 = getWD();
+    double A1 = parentWave;
     double G2 = 1/getLeftChild()->getPortRes();
     double A2 = getLeftChild()->getWU();
     double G3 = 1/getRightChild()->getPortRes();
