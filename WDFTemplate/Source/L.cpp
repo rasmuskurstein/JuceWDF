@@ -19,8 +19,8 @@ L::L(double res){
 L::~L(){};
 
 double L::WaveUp(){
-    setWU(State);
-    return State;
+    setWU(-State);
+    return -State;
 };
 
 void L::WaveDown(double parentWave){

@@ -9,7 +9,6 @@
 */
 
 #pragma once
-#include "OnePort.h"
 #include "WDF.h"
 
 class C : public WDF{
@@ -22,5 +21,4 @@ public:
     
 private:
     double State;
-    
 };

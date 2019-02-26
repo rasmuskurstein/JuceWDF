@@ -111,17 +111,15 @@ void WdftemplateAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     df = 0.5;           // Dampening Factor
     wc = 2*double_Pi*fc; //
     double C1val = 3.5e-5;
-    C1.setPortRes(1/(2*C1val*sampleRate));
+    C1Ptr->setPortRes(1/(2*C1val*sampleRate));
     double L1val = 1/(square(wc)*C1val);
-    L1.setPortRes(2*sampleRate*L1val);
+    L1Ptr->setPortRes(2*sampleRate*L1val);
     double R1val = 1/(2*df)*sqrt(L1val/C1val);
-    Vout.setPortRes(R1val);
+    VoutPtr->setPortRes(R1val);
     
-    p1 = par(L(1),V(0, 1));
-    s1 = ser(&Vin,p1);
-    circuit = ser(s1,&C1);
-    
-    
+    p1 = std::make_shared<par>(C1Ptr,VoutPtr);
+    s1 = std::make_shared<ser>(VinPtr,p1);
+    circuit = std::make_shared<ser>(s1,L1Ptr);
 }
 
 void WdftemplateAudioProcessor::releaseResources()
@@ -184,12 +182,12 @@ void WdftemplateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBu
             for (int j = 0; j < buffer.getNumSamples(); ++j)
             {
                 auto sample = buffer.getReadPointer (channel)[j];
-                Vin.setVoltage(sample);
+                double sam = (double) sample;
+                VinPtr->setVoltage(sam);
                 circuit->WaveUp();
                 circuit->WaveDown(0);
-                //std::cout << circuit.getRightChild()->getPortRes();
-                std::cout << Vout.getVoltage();
-                channelData[j] = Vout.getVoltage();
+                double makeupGain = 200;
+                channelData[j] = VoutPtr->Voltage()*makeupGain;
             }
         } else
         {

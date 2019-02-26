@@ -7,17 +7,16 @@
 
   ==============================================================================
 */
-
+#include <iostream>
+#include "memory"
 #include "par.h"
 #include "WDF.h"
-#include "Adaptor.h"
 
-par::par(WDF* left, WDF* right) // : Adaptor(left, right)
+par::par(std::shared_ptr<WDF> left, std::shared_ptr<WDF> right) // : Adaptor(left, right)
     {
     double res = left->getPortRes()+right->getPortRes();
     setPortRes(res);
         
-    // No adaptor
     LeftChild = left;
     RightChild = right;
 }
@@ -43,17 +42,16 @@ void par::WaveDown(double parentWave){
     double B = 2*(G1*A1+G2*A2+G3*A3)/(G1+G2+G3);
     double WDL = B-A2;
     double WDR = B-A3;
-   
+    
     getLeftChild()->WaveDown(WDL);
     getRightChild()->WaveDown(WDR);
 };
 
-// No adaptor
 
-WDF* par::getLeftChild(){
+std::shared_ptr<WDF> par::getLeftChild(){
     return LeftChild;
 }
 
-WDF* par::getRightChild(){
+std::shared_ptr<WDF> par::getRightChild(){
     return RightChild;
 }

@@ -10,7 +10,7 @@
 
 #include "R.h"
 #include "WDF.h"
-
+#include <iostream>
 
 R::R(double res){
     setPortRes(res);

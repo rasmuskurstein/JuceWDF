@@ -8,16 +8,17 @@
   ==============================================================================
 */
 
-#include "ser.h"
-#include "WDF.h"
-#include "Adaptor.h"
 
-ser::ser(WDF* left, WDF* right)// : Adaptor(left, right)
+#include "WDF.h"
+#include "memory"
+#include "ser.h"
+#include <iostream>
+
+ser::ser(std::shared_ptr<WDF> left, std::shared_ptr<WDF> right)// : Adaptor(left, right)
     {
     double res = left->getPortRes()+right->getPortRes();
     setPortRes(res);
         
-    // No adaptor
     LeftChild = left;
     RightChild = right;
 }
@@ -34,20 +35,19 @@ void ser::WaveDown(double parentWave){
     setWD(parentWave);
     
     double WDL = getLeftChild()->getWU()-(getLeftChild()->getPortRes()/getPortRes())*(parentWave+getLeftChild()->getWU()+getRightChild()->getWU());
+    
     getLeftChild()->WaveDown(WDL);
     
     double WDR = getRightChild()->getWU()-(getRightChild()->getPortRes()/getPortRes())*(parentWave+getLeftChild()->getWU()+getRightChild()->getWU());
+    
     getRightChild()->WaveDown(WDR);
 };
 
-
-// No adaptor
-
-WDF* ser::getLeftChild(){
+std::shared_ptr<WDF> ser::getLeftChild(){
     return LeftChild;
 }
 
-WDF* ser::getRightChild(){
+std::shared_ptr<WDF> ser::getRightChild(){
     return RightChild;
 }
 

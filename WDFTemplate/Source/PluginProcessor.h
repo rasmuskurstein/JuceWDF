@@ -12,14 +12,12 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "WDF.h"
-#include "OnePort.h"
 #include "V.h"
-#include "ser.h"
 #include "R.h"
-#include "Adaptor.h"
 #include "C.h"
 #include "L.h"
 #include "par.h"
+#include "ser.h"
 
 //==============================================================================
 /**
@@ -75,9 +73,14 @@ private:
     L L1{1};
     R Vout{1};
     V Vin{0,1};
-    par* p1;
-    ser* s1;
-    ser* circuit;
+    std::shared_ptr<par> p1;
+    std::shared_ptr<ser> s1;
+    std::shared_ptr<ser> circuit;
+    
+    std::shared_ptr<L> L1Ptr = std::make_shared<L>(L1);
+    std::shared_ptr<R> VoutPtr = std::make_shared<R>(Vout);
+    std::shared_ptr<V> VinPtr = std::make_shared<V>(Vin);
+    std::shared_ptr<C> C1Ptr = std::make_shared<C>(C1);
     
 //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WdftemplateAudioProcessor)

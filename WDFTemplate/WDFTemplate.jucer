@@ -10,8 +10,6 @@
       <FILE id="NnpMMy" name="ser.h" compile="0" resource="0" file="Source/ser.h"/>
       <FILE id="raPTDi" name="par.cpp" compile="1" resource="0" file="Source/par.cpp"/>
       <FILE id="PL18ge" name="par.h" compile="0" resource="0" file="Source/par.h"/>
-      <FILE id="tAeDyI" name="OnePort.cpp" compile="1" resource="0" file="Source/OnePort.cpp"/>
-      <FILE id="DV0j7j" name="OnePort.h" compile="0" resource="0" file="Source/OnePort.h"/>
       <FILE id="bPPPlW" name="V.cpp" compile="1" resource="0" file="Source/V.cpp"/>
       <FILE id="TTWt59" name="V.h" compile="0" resource="0" file="Source/V.h"/>
       <FILE id="AXduMK" name="R.cpp" compile="1" resource="0" file="Source/R.cpp"/>
@@ -27,8 +25,6 @@
       <FILE id="MEZP93" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="Tn4H4S" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="PL8Qdg" name="Adaptor.cpp" compile="1" resource="0" file="Source/Adaptor.cpp"/>
-      <FILE id="eco3vU" name="Adaptor.h" compile="0" resource="0" file="Source/Adaptor.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

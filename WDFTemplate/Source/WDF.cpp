@@ -7,21 +7,23 @@
 
   ==============================================================================
 */
-
+#include <iostream>
 #include "WDF.h"
 
 WDF::WDF(){
     PortRes = 1;
-    //setWU(0);
-    //setWD(0);
 };
 
 WDF::~WDF(){
 };
 
-double WDF::getVoltage(){
-    float Volts = (getWU()+getWD())/2;
+double WDF::Voltage(){
+    double Volts = (getWU()+getWD())/2;
     return Volts;
+};
+
+double WDF::getVoltage(){
+    return E;
 };
 
 void WDF::setVoltage(double volts){
@@ -46,14 +48,4 @@ void WDF::setWD(double wave){
 };
 void WDF::setPortRes(double res){
     PortRes = res;
-};
-
-double WDF::WaveUp(){
-    double wave = 0;
-    setWU(wave); // always zero for linear resistor
-    return wave;
-};
-
-void WDF::WaveDown(double parentWave){
-    setWD(parentWave);
 };

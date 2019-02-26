@@ -17,6 +17,7 @@ public:
     WDF();
     virtual ~WDF();
     
+    double Voltage();
     double getVoltage();
     void setVoltage(double);
     double getWU();

@@ -9,23 +9,21 @@
 */
 
 #pragma once
-#include "Adaptor.h"
 #include "WDF.h"
 
 class ser : public WDF{
     
 public:
-    ser(WDF*, WDF*);
+    ser(std::shared_ptr<WDF>, std::shared_ptr<WDF>);
     ~ser();
     double WaveUp() override;
     void WaveDown(double) override;
     
-    // no adaptor
-    WDF* getLeftChild();
-    WDF* getRightChild();
+    std::shared_ptr<WDF> getLeftChild();
+    std::shared_ptr<WDF> getRightChild();
 private:
     
     // No adaptor
-    WDF* LeftChild;
-    WDF* RightChild;
+    std::shared_ptr<WDF> LeftChild;
+    std::shared_ptr<WDF> RightChild;
 };
